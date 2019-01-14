@@ -1,0 +1,11 @@
+{
+  "lambda": {
+    "role": "chrome-executor",
+    "name": "chrome",
+    "region": "us-east-1"
+  },
+  "api": {
+    "id": "pcpkjsc009",
+    "module": "handler"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "chrome",
+  "version": "1.0.0",
+  "description": "",
+  "main": "handler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "claudia create --region us-east-1 --api-module handler --use-s3-bucket 'ngmail'",
+    "update": "claudia update --region us-east-1 --api-module handler --use-s3-bucket 'ngmail' --timeout 120",
+    "delete-role": "aws iam delete-role-policy --role-name chrome-executor --policy-name log-writer && aws iam delete-role --role-name chrome-executor"
+  },
+  "author": "Milos Bejda <mbejda@live.com> (tired.io)",
+  "license": "ISC",
+  "dependencies": {
+    "@serverless-chrome/lambda": "^1.0.0-55",
+    "claudia-api-builder": "^4.1.1",
+    "lighthouse": "^4.0.0-alpha.2-3.2.1",
+    "phantomjs-prebuilt": "^2.1.16",
+    "serverless-plugin-chrome": "^1.0.0-55"
+  },
+  "devDependencies": {
+    "serverless-attach-managed-policy": "0.0.7"
+  }
+}
