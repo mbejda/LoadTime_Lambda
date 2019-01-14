@@ -1,5 +1,5 @@
 // https://github.com/GoogleChrome/lighthouse
-const createLighthouse = require('lighthouse-lambda');
+var phantomjs = require('phantomjs-prebuilt');
 
 
 var ApiBuilder = require('claudia-api-builder'),
@@ -18,22 +18,23 @@ api.get('/ping', function (request,response) {
         console.log(url);
 
 
-        Promise.resolve()
-            .then(() => createLighthouse(url, { logLevel: 'info' }))
-            .then(({ chrome, start }) => {
-                return start()
-                    .then((results) => {
-                        // Do something with `results`
-                        return chrome.kill().then(() => resolve(results))
-                    })
-                    .catch((error) => {
-                        // Handle errors when running Lighthouse
-                        return chrome.kill().then(() => reject(error))
-                    })
-            })
-            // Handle other errors
-            .catch(e=>reject(e));
+        var phantom = phantomjs.exec('phantomjs-script.js', url, 'arg2');
 
+
+
+        phantom.stdout.on('data', function(buf) {
+            console.log('[STR] stdout "%s"', String(buf));
+        });
+        phantom.stderr.on('data', function(buf) {
+            console.log('[STR] stderr "%s"', String(buf));
+        });
+        phantom.on('close', function(code) {
+            console.log('[END] code', code);
+        });
+
+        phantom.on('exit', code => {
+            resolve()
+        });
 
 
 

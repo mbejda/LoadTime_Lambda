@@ -10,18 +10,11 @@ if (system.args.length === 1) {
 t = Date.now();
 address = system.args[1];
 
-var resources = [];
-page.on('onResourceReceived', function (response) {
-    console.log('WOA ',response);
-    if (response.stage !== "end") return;
-    resources.push(response);
-})
-
 
 page.open(address, function(status) {
+    console.log(JSON.stringify(arguments));
     if (status !== 'success') {
         console.log('FAIL to load address');
-        console.log('EAD RESOURCES ',resources)
     } else {
         t = Date.now() - t;
         console.log('Loading time ' + t + ' msec');
