@@ -1,5 +1,5 @@
 // https://github.com/GoogleChrome/lighthouse
-var phantomjs = require('phantomjs-prebuilt');
+const PWMetrics = require('pwmetrics');
 
 
 var ApiBuilder = require('claudia-api-builder'),
@@ -18,23 +18,24 @@ api.get('/ping', function (request,response) {
         console.log(url);
 
 
-        var phantom = phantomjs.exec('phantomjs-script.js', url, 'arg2');
 
 
+        const options = {
+            flags: {
+                runs: 1, // number or runs
+                submit: false, // turn on submitting to Google Sheets
+                upload: false, // turn on uploading to Google Drive
+                view: false, // open uploaded traces to Google Drive in DevTools
+                expectations: true, // turn on assertation metrics results against provides values
+                chromeFlags: '--headless' // run in headless Chrome
+            }
+        };
 
-        phantom.stdout.on('data', function(buf) {
-            console.log('[STR] stdout "%s"', String(buf));
-        });
-        phantom.stderr.on('data', function(buf) {
-            console.log('[STR] stderr "%s"', String(buf));
-        });
-        phantom.on('close', function(code) {
-            console.log('[END] code', code);
-        });
-
-        phantom.on('exit', code => {
-            resolve()
-        });
+        const pwMetrics = new PWMetrics(url, options); // _All available configuration options_ can be used as `options`
+        pwMetrics.start().then((response)=>{
+            console.log('DONE ',response)
+            resolve(response);
+        }).catch(e=>reject(e));
 
 
 

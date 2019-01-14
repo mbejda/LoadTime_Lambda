@@ -13,7 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "claudia-api-builder": "^4.1.1",
-    "phantomjs-prebuilt": "^2.1.16"
+    "pwmetrics": "^4.1.1"
   },
   "devDependencies": {
     "serverless-attach-managed-policy": "0.0.7"
