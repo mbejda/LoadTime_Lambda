@@ -62,8 +62,8 @@ api.get('/ping', function (req,res) {
 
 
             phantom.stdout.on('data', function (buf) {
-                console.log('BUF ,',buf)
-                const time_object = JSON.parse("'"+buf+"'");
+                console.log('BUF ,',buf.toString())
+                const time_object = JSON.parse("'"+buf.toString()+"'");
                 response_object.load_time = time_object.load_time;
 
             });
