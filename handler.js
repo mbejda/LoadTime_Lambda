@@ -1,5 +1,5 @@
 // https://github.com/GoogleChrome/lighthouse
-const PWMetrics = require('pwmetrics');
+const createLighthouse = require('lighthouse-lambda');
 
 
 var ApiBuilder = require('claudia-api-builder'),
@@ -18,24 +18,22 @@ api.get('/ping', function (request,response) {
         console.log(url);
 
 
+        Promise.resolve()
+            .then(() => createLighthouse(url, { logLevel: 'info' }))
+            .then(({ chrome, start }) => {
+                return start()
+                    .then((results) => {
+                        // Do something with `results`
+                        return chrome.kill().then(() => resolve(results))
+                    })
+                    .catch((error) => {
+                        // Handle errors when running Lighthouse
+                        return chrome.kill().then(() => reject(error))
+                    })
+            })
+            // Handle other errors
+            .catch(e=>reject(e));
 
-
-        const options = {
-            flags: {
-                runs: 1, // number or runs
-                submit: false, // turn on submitting to Google Sheets
-                upload: false, // turn on uploading to Google Drive
-                view: false, // open uploaded traces to Google Drive in DevTools
-                chromeFlags: '--headless', // run in headless Chrome
-                chromePath:'./node_modules/@serverless-chrome/lambda/dist/headless-chromium'
-            }
-        };
-
-        const pwMetrics = new PWMetrics(url, options); // _All available configuration options_ can be used as `options`
-        pwMetrics.start().then((response)=>{
-            console.log('DONE ',response)
-            resolve(response);
-        }).catch(e=>reject(e));
 
 
 
