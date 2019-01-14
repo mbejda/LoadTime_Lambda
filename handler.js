@@ -26,7 +26,6 @@ api.get('/ping', function (request,response) {
                 submit: false, // turn on submitting to Google Sheets
                 upload: false, // turn on uploading to Google Drive
                 view: false, // open uploaded traces to Google Drive in DevTools
-                expectations: true, // turn on assertation metrics results against provides values
                 chromeFlags: '--headless' // run in headless Chrome
             }
         };
