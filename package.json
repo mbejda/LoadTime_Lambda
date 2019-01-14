@@ -12,11 +12,8 @@
   "author": "Milos Bejda <mbejda@live.com> (tired.io)",
   "license": "ISC",
   "dependencies": {
-    "@serverless-chrome/lambda": "^1.0.0-55",
     "claudia-api-builder": "^4.1.1",
-    "lighthouse": "^4.0.0-alpha.2-3.2.1",
-    "phantomjs-prebuilt": "^2.1.16",
-    "serverless-plugin-chrome": "^1.0.0-55"
+    "phantomjs-prebuilt": "^2.1.16"
   },
   "devDependencies": {
     "serverless-attach-managed-policy": "0.0.7"
