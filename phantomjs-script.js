@@ -17,7 +17,7 @@ page.open(address, function(status) {
         console.log('FAIL to load address');
     } else {
         t = Date.now() - t;
-        console.log('Loading time ' + t + ' msec');
+        console.log(JSON.stringify({load_time: t}));
     }
     phantom.exit();
 });

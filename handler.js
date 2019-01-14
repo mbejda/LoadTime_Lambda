@@ -1,5 +1,7 @@
 // https://github.com/GoogleChrome/lighthouse
 var phantomjs = require('phantomjs-prebuilt');
+var request = require('request');
+
 
 
 var ApiBuilder = require('claudia-api-builder'),
@@ -10,34 +12,75 @@ module.exports = api;
 
 
 
-api.get('/ping', function (request,response) {
+api.get('/ping', function (request,res) {
     return new Promise(function (resolve, reject) {
 
-
         let url = request.queryString.url;
+        let header = request.queryString.header;
         console.log(url);
 
+        const response_object = {
+            error: null,
+            status_code: 0,
+            response_time : 0,
+            load_time: 0,
+            url
+        };
 
-        var phantom = phantomjs.exec('phantomjs-script.js', url, 'arg2');
+
+        let request_object = {
+            url,
+            time : true
+        };
+        if(header){
+            const parsed = JSON.parse(header);
+            request_object = Object.assign(request_object,parsed);
+        }
 
 
 
-        phantom.stdout.on('data', function(buf) {
-            console.log('[STR] stdout "%s"', String(buf));
+        request.get(request_object,function(err, response) {
+            if(err || !response){
+                response_object.error = err;
+                resolve(response_object);
+                return;
+            }
+            response_object.response_time = response.elapsedTime;
+
+            console.log('Request time in ms', response.elapsedTime);
+
+            response_object.status_code = response.statusCode;
+
+            if(response_object.status_code !== 200){
+                resolve(response_object);
+                return;
+            }
+
+
+
+            var phantom = phantomjs.exec('phantomjs-script.js', url, 'arg2');
+
+
+            phantom.stdout.on('data', function (buf) {
+                console.log('[STR] stdout "%s"', String(buf));
+                const time_object = JSON.parse(String(buf));
+                response_object.load_time = time_object.load_time;
+
+            });
+            phantom.stderr.on('data', function (buf) {
+                console.log('[STR] stderr "%s"', String(buf));
+
+            });
+            phantom.on('close', function (code) {
+                console.log('[END] code', code);
+            });
+
+            phantom.on('exit', code => {
+                resolve(response_object)
+            });
+
+
         });
-        phantom.stderr.on('data', function(buf) {
-            console.log('[STR] stderr "%s"', String(buf));
-        });
-        phantom.on('close', function(code) {
-            console.log('[END] code', code);
-        });
-
-        phantom.on('exit', code => {
-            resolve()
-        });
-
-
-
 
 
     });
