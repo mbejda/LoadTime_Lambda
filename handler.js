@@ -12,11 +12,11 @@ module.exports = api;
 
 
 
-api.get('/ping', function (request,res) {
+api.get('/ping', function (req,res) {
     return new Promise(function (resolve, reject) {
 
-        let url = request.queryString.url;
-        let header = request.queryString.header;
+        let url = req.queryString.url;
+        let header = req.queryString.header;
         console.log(url);
 
         const response_object = {
