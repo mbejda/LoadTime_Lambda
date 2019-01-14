@@ -23,7 +23,7 @@ api.get('/ping', function (req,res) {
             error: null,
             status_code: 0,
             response_time : 0,
-            load_time: 0,
+            region: process.env.AWS_REGION,
             url
         };
 
@@ -46,38 +46,8 @@ api.get('/ping', function (req,res) {
                 return;
             }
             response_object.response_time = response.elapsedTime;
-
-            console.log('Request time in ms', response.elapsedTime);
-
             response_object.status_code = response.statusCode;
-
-            if(response_object.status_code !== 200){
-                resolve(response_object);
-                return;
-            }
-
-
-
-            var phantom = phantomjs.exec('phantomjs-script.js', url, 'arg2');
-
-
-            phantom.stdout.on('data', function (buf) {
-                console.log('BUF ,',buf.toString())
-                const time_object = JSON.parse("'"+buf.toString()+"'");
-                response_object.load_time = time_object.load_time;
-
-            });
-            phantom.stderr.on('data', function (buf) {
-                console.log('[STR] stderr "%s"', String(buf));
-
-            });
-            phantom.on('close', function (code) {
-                console.log('[END] code', code);
-            });
-
-            phantom.on('exit', code => {
-                resolve(response_object)
-            });
+            resolve(response_object);
 
 
         });
