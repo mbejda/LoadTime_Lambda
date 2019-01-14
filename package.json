@@ -12,6 +12,7 @@
   "author": "Milos Bejda <mbejda@live.com> (tired.io)",
   "license": "ISC",
   "dependencies": {
+    "@serverless-chrome/lambda": "^1.0.0-55",
     "claudia-api-builder": "^4.1.1",
     "pwmetrics": "^4.1.1"
   },

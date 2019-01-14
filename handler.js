@@ -26,7 +26,8 @@ api.get('/ping', function (request,response) {
                 submit: false, // turn on submitting to Google Sheets
                 upload: false, // turn on uploading to Google Drive
                 view: false, // open uploaded traces to Google Drive in DevTools
-                chromeFlags: '--headless' // run in headless Chrome
+                chromeFlags: '--headless', // run in headless Chrome
+                chromePath:'./node_modules/@serverless-chrome/lambda/dist/headless-chromium'
             }
         };
 
